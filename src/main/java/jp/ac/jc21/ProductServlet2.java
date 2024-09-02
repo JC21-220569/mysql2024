@@ -16,12 +16,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+
  * Servlet implementation class IndexServlet
+
  */
 
-@WebServlet(urlPatterns = { "/result1" })
+@WebServlet(urlPatterns = { "/item2" })
 
-public class Result1Servlet extends HttpServlet {
+public class ProductServlet2 extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,32 +38,55 @@ public class Result1Servlet extends HttpServlet {
 	final String pass = "test2023";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+
 			throws ServletException, IOException {
+
 		//		response.getWriter().append("Served at: ").append(request.getContextPath());
+
 		String url = "jdbc:mysql://" + dbServer + "/" + dbName;
+
 		response.setContentType("text/html;charset=UTF-8");
+
 		response.getWriter().append("<h2>Connect to : ").append(url).append("</h2>");
 
 		try {
+
 			Class.forName("com.mysql.cj.jdbc.Driver");
+
 			Connection conn = DriverManager.getConnection(url, user, pass);
-			String sql = "SELECT item_id, item_name, price FROM Items" + " Where item_id = ? ";
+
+			String sql = "SELECT PRODUCT_CODE, PRODUCT_NAME FROM PRODUCT" + " Where PRODUCT_CODE = ? ";
+
 			PreparedStatement statement = conn.prepareStatement(sql);
+
 			String id = request.getParameter("ID");
+
 			statement.setString(1, id);
+
 			ResultSet rs = statement.executeQuery();
+
 			ArrayList<String[]> result = new ArrayList<>();
+
 			while (rs.next() == true) {
+
 				String[] s = new String[3];
-				s[0] = rs.getString("item_name");
-				s[1] = rs.getString("item_id");
-				s[2] = rs.getString("price");
+
+				s[0] = rs.getString("PRODUCT_CODE");
+
+				s[1] = rs.getString("PRODUCT_NAME");
+
+				//s[2] = rs.getString("price");
+
 				result.add(s);
+
 			}
 
 			request.setAttribute("result", result);
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/result1.jsp");
+
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/product2.jsp");
+
 			rd.forward(request, response);
+
 		} catch (SQLException e) {
 
 			e.printStackTrace();
